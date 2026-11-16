@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Tanya AI Medis{% endblock %}
+{% block content %}
+<section class="page-wrap">
+  <span class="eyebrow">ASISTEN INFORMASI KESEHATAN</span>
+  <h1 class="page-title">Tanya AI Medis</h1>
+  <p class="sub-title">Tanyakan informasi kesehatan umum melalui asisten AI Puskesmas Digital.</p>
+  <div class="ai-layout">
+    <aside class="side-panel ai-intro">
+      <div class="ai-logo"><span class="material-symbols-outlined">smart_toy</span></div>
+      <h2>Asisten Kesehatan Digital</h2>
+      <p>Asisten ini membantu menjelaskan informasi kesehatan umum, imunisasi, dan layanan Puskesmas.</p>
+      <h4>Contoh pertanyaan</h4>
+      <button class="suggestion" type="button" onclick="askExample('Apa saja informasi imunisasi dasar untuk bayi?')">Informasi imunisasi bayi</button>
+      <button class="suggestion" type="button" onclick="askExample('Bagaimana cara menjaga pola hidup sehat?')">Tips pola hidup sehat</button>
+      <button class="suggestion" type="button" onclick="askExample('Bagaimana cara membuat jadwal konsultasi?')">Cara membuat konsultasi</button>
+    </aside>
+    <section class="side-panel chat-panel">
+      <div class="chat-head">
+        <span class="doctor-dot"><span class="material-symbols-outlined">smart_toy</span></span>
+        <div><b>Asisten AI Puskesmas</b><small><i></i> Siap membantu</small></div>
+        <span class="ai-badge">AI ASSISTANT</span>
+      </div>
+      <div id="chat-box" class="chat-box">
+        <div class="chat-message bot"><b>Halo {{ current_user.name }}!</b><br>Ada yang ingin Anda tanyakan tentang informasi kesehatan atau layanan Puskesmas?</div>
+      </div>
+      <form id="chat-form" class="chat-form">
+        <input id="question" maxlength="1500" placeholder="Tulis pertanyaan Anda di sini..." required>
+        <button class="btn-primary" type="submit"><span class="material-symbols-outlined">send</span>Kirim</button>
+      </form>
+      <p class="disclaimer">Informasi AI hanya untuk edukasi umum, bukan diagnosis atau pengganti konsultasi dokter. Jangan masukkan NIK, data identitas, atau rekam medis pribadi.</p>
+    </section>
+  </div>
+</section>
+{% endblock %}

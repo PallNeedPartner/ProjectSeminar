@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Jadwal & Imunisasi{% endblock %}
+{% block content %}
+<section class="page-wrap">
+  <span class="eyebrow">KESEHATAN IBU &amp; ANAK</span>
+  <h1 class="page-title">Jadwal &amp; Informasi Imunisasi</h1>
+  <p class="sub-title">Kenali informasi vaksinasi berdasarkan kelompok usia.</p>
+  <div class="hero-banner compact-hero">
+    <div class="hero-copy">
+      <span class="eyebrow">PROGRAM PERLINDUNGAN KELUARGA</span>
+      <h2>Lindungi kesehatan<br>sejak dini.</h2>
+      <p>Pantau informasi imunisasi dan diskusikan jadwal pemberian vaksin bersama petugas kesehatan.</p>
+      <a class="btn-primary" href="{{ url_for('konsultasi') }}">Tanya Tenaga Medis</a>
+    </div>
+    <div class="hero-visual"><div class="medical-illustration vaccine-art"><span class="material-symbols-outlined">vaccines</span><b>VACCINE<br>CARE</b></div></div>
+  </div>
+  <div class="notice-box"><span class="material-symbols-outlined">info</span><p>Informasi ini merupakan data prototipe untuk edukasi. Jadwal, dosis, dan jenis vaksin harus dikonfirmasi berdasarkan Buku KIA serta pedoman resmi terbaru oleh petugas kesehatan.</p></div>
+  <div class="section-heading"><div><h2>Daftar Imunisasi</h2><p>Informasi vaksin berdasarkan kelompok usia.</p></div><span class="count-pill">{{ items|length }} informasi</span></div>
+  <input id="vaccine-search" class="search-field" placeholder="Cari nama vaksin atau kelompok usia...">
+  <div class="vaccine-grid" id="vaccine-grid">
+    {% for item in items %}
+    <article class="side-panel vaccine-card">
+      <div class="vaccine-card-top"><span class="service-icon"><span class="material-symbols-outlined">vaccines</span></span><span class="program-tag">IMUNISASI</span></div>
+      <h3>{{ item.name }}</h3><span class="age-pill">{{ item.age_group }}</span>
+      <p>{{ item.description }}</p>
+      <div class="schedule-box"><small>INFORMASI JADWAL</small><b>{{ item.schedule }}</b></div>
+    </article>
+    {% else %}
+    <div class="side-panel">Belum ada informasi imunisasi.</div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

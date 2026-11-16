@@ -1,0 +1,1229 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Puskesmas Digital{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed":"#002114",
+                        "on-tertiary":"#ffffff",
+                        "surface-container-low":"#f2f3ff",
+                        "primary-container":"#007bb9",
+                        "on-error-container":"#93000a",
+                        "surface-container-high":"#e2e7ff",
+                        "surface-container-highest":"#dae2fd",
+                        "outline-variant":"#bfc7d2",
+                        "outline":"#707881",
+                        "surface-variant":"#dae2fd",
+                        "secondary-fixed-dim":"#68dba9",
+                        "on-secondary-container":"#00714e",
+                        "error-container":"#ffdad6",
+                        "inverse-surface":"#283044",
+                        "surface-dim":"#d2d9f4",
+                        "secondary":"#006c4a",
+                        "on-error":"#ffffff",
+                        "tertiary":"#006387",
+                        "on-primary":"#ffffff",
+                        "surface":"#faf8ff",
+                        "on-background":"#131b2e",
+                        "surface-container-lowest":"#ffffff",
+                        "primary-fixed":"#cce5ff",
+                        "primary-fixed-dim":"#93ccff",
+                        "surface-bright":"#faf8ff",
+                        "on-primary-container":"#fdfcff",
+                        "surface-tint":"#006398",
+                        "on-primary-fixed-variant":"#004b73",
+                        "secondary-container":"#82f5c1",
+                        "on-surface":"#131b2e",
+                        "on-tertiary-fixed":"#001e2c",
+                        "tertiary-fixed-dim":"#7bd0ff",
+                        "surface-container":"#eaedff",
+                        "tertiary-fixed":"#c4e7ff",
+                        "secondary-fixed":"#85f8c4",
+                        "error":"#ba1a1a",
+                        "primary":"#006194",
+                        "background":"#faf8ff",
+                        "inverse-primary":"#93ccff",
+                        "on-secondary":"#ffffff",
+                        "on-surface-variant":"#3f4850",
+                        "tertiary-container":"#007da9",
+                        "on-tertiary-fixed-variant":"#004c69",
+                        "inverse-on-surface":"#eef0ff",
+                        "on-tertiary-container":"#fcfcff",
+                        "on-primary-fixed":"#001d31"
+                    },
+                    borderRadius: {
+                        DEFAULT:"0.25rem",
+                        lg:"0.5rem",
+                        xl:"0.75rem",
+                        full:"9999px"
+                    },
+                    spacing: {
+                        "space-xs":"0.25rem",
+                        "space-md":"1rem",
+                        "space-sm":"0.5rem",
+                        gutter:"1rem",
+                        margin:"1rem",
+                        "space-xl":"2rem",
+                        "space-lg":"1.5rem"
+                    },
+                    fontFamily: {
+                        "body-sm":["Plus Jakarta Sans"],
+                        "headline-sm":["Plus Jakarta Sans"],
+                        "display-lg":["Plus Jakarta Sans"],
+                        "label-sm":["Plus Jakarta Sans"],
+                        "headline-lg":["Plus Jakarta Sans"],
+                        "body-lg":["Plus Jakarta Sans"],
+                        "label-lg":["Plus Jakarta Sans"],
+                        "body-md":["Plus Jakarta Sans"],
+                        "headline-md":["Plus Jakarta Sans"],
+                        "label-md":["Plus Jakarta Sans"]
+                    },
+                    fontSize: {
+                        "body-sm":["12px",{lineHeight:"18px",fontWeight:"400"}],
+                        "headline-sm":["18px",{lineHeight:"26px",fontWeight:"600"}],
+                        "display-lg":["36px",{lineHeight:"44px",letterSpacing:"-0.02em",fontWeight:"700"}],
+                        "label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.04em",fontWeight:"700"}],
+                        "headline-lg":["28px",{lineHeight:"36px",letterSpacing:"-0.01em",fontWeight:"700"}],
+                        "body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],
+                        "label-lg":["14px",{lineHeight:"20px",fontWeight:"600"}],
+                        "body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],
+                        "headline-md":["22px",{lineHeight:"30px",letterSpacing:"-0.01em",fontWeight:"600"}],
+                        "label-md":["12px",{lineHeight:"16px",fontWeight:"600"}]
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            overscroll-behavior: none;
+        }
+
+        *::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* HEADER UTAMA */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(250, 248, 255, 0.96);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+            border-bottom: 1px solid #e2e7ff;
+        }
+
+        .header-inner {
+            min-height: 76px;
+            padding: 12px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #006194;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-name {
+            color: #006194;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .brand-subtitle {
+            color: #707881;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .location-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: #e2e7ff;
+            color: #3f4850;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .header-search {
+            width: 100%;
+            max-width: 390px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: #f2f3ff;
+        }
+
+        .header-search input {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            font-family: inherit;
+            font-size: 12px;
+            color: #131b2e;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .emergency-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            background: #ffdad6;
+            color: #93000a;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .notification-button {
+            position: relative;
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 10px;
+            background: transparent;
+            color: #3f4850;
+            cursor: pointer;
+        }
+
+        .notification-button:hover {
+            background: #e2e7ff;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ba1a1a;
+        }
+
+        .profile-chip {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 5px 12px 5px 5px;
+            border-radius: 999px;
+            background: #f2f3ff;
+            text-decoration: none;
+            min-width: 0;
+        }
+
+        .profile-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #006194;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .profile-name {
+            max-width: 125px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 11px;
+            font-weight: 700;
+            color: #131b2e;
+        }
+
+        .profile-status {
+            font-size: 9px;
+            color: #006c4a;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* NAVIGASI */
+        .main-nav {
+            min-height: 48px;
+            padding: 0 32px 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-top: 1px solid rgba(191,199,210,0.35);
+            overflow-x: auto;
+        }
+
+        .main-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            color: #3f4850;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: .2s;
+        }
+
+        .main-nav a:hover {
+            background: #e2e7ff;
+            color: #006194;
+        }
+
+        .main-nav a.active {
+            background: #007bb9;
+            color: white;
+        }
+
+        .main-nav .nav-icon {
+            font-size: 18px;
+        }
+
+        .mobile-search {
+            display: none;
+        }
+
+        @media (max-width: 1100px) {
+            .header-search {
+                max-width: 260px;
+            }
+
+            .location-chip {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-inner {
+                padding: 10px 16px;
+                min-height: 68px;
+                gap: 10px;
+            }
+
+            .brand-subtitle {
+                display: none;
+            }
+
+            .brand-name {
+                font-size: 15px;
+            }
+
+            .header-search {
+                display: none;
+            }
+
+            .emergency-chip {
+                display: none;
+            }
+
+            .header-actions {
+                gap: 5px;
+            }
+
+            .profile-chip {
+                padding-right: 7px;
+            }
+
+            .profile-name,
+            .profile-status {
+                display: none;
+            }
+
+            .main-nav {
+                padding: 0 12px 9px;
+                gap: 4px;
+            }
+
+            .main-nav a {
+                padding: 9px 11px;
+                font-size: 11px;
+            }
+
+            main {
+                padding-top: 118px !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-background font-body-md text-on-surface antialiased min-h-screen">
+
+{% set user_role = current_user.role if current_user is defined and current_user.is_authenticated else 'pengunjung' %}
+{% set user_name = current_user.name if current_user is defined and current_user.is_authenticated else 'Pengunjung' %}
+
+<!-- HEADER / NAVBAR -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="{{ url_for('dashboard') }}" class="brand">
+      <span class="brand-mark"><span class="material-symbols-outlined">local_hospital</span></span>
+      <span><b>Puskesmas Digital</b><small>Sistem Layanan Kesehatan Terpadu</small></span>
+    </a>
+    <div class="location-chip"><span class="material-symbols-outlined">location_on</span> Puskesmas Penggilingan</div>
+    <div class="header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input id="globalSearch" placeholder="Cari layanan, dokter, informasi..." aria-label="Cari halaman">
+    </div>
+    <div class="header-actions">
+      <a class="emergency-chip" href="tel:119"><span class="material-symbols-outlined">emergency</span> IGD 119</a>
+      <a class="icon-button" href="{{ url_for('profile') }}" title="Profil"><span class="material-symbols-outlined">notifications</span></a>
+      <div class="user-chip">
+        <span class="user-avatar">{{ (current_user.name or 'U')[0]|upper }}</span>
+        <span class="user-chip-text"><b>{{ current_user.name }}</b><small>{{ current_user.role|capitalize }}</small></span>
+      </div>
+      <a class="logout-link" href="{{ url_for('logout') }}" title="Keluar"><span class="material-symbols-outlined">logout</span></a>
+    </div>
+  </div>
+  <nav class="main-nav">
+    <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint=='dashboard' %}active{% endif %}"><span class="material-symbols-outlined">home</span>Beranda</a>
+    <a href="{{ url_for('ai') }}" class="{% if request.endpoint=='ai' %}active{% endif %}"><span class="material-symbols-outlined">smart_toy</span>Tanya AI Medis</a>
+    <a href="{{ url_for('imunisasi') }}" class="{% if request.endpoint=='imunisasi' %}active{% endif %}"><span class="material-symbols-outlined">vaccines</span>Jadwal &amp; Imunisasi</a>
+    <a href="{{ url_for('konsultasi') }}" class="{% if request.endpoint=='konsultasi' %}active{% endif %}"><span class="material-symbols-outlined">stethoscope</span>Konsultasi &amp; Dokter</a>
+    <a href="{{ url_for('rekam_medis') }}" class="{% if request.endpoint=='rekam_medis' %}active{% endif %}"><span class="material-symbols-outlined">clinical_notes</span>Rekam Medis</a>
+    {% if current_user.role in ['admin','dokter','medis'] %}
+    <a href="{{ url_for('pasien') }}" class="{% if request.endpoint=='pasien' %}active{% endif %}"><span class="material-symbols-outlined">groups</span>Data Pasien</a>
+    {% endif %}
+    {% if current_user.role=='admin' %}
+    <a href="{{ url_for('pengguna') }}" class="{% if request.endpoint=='pengguna' %}active{% endif %}"><span class="material-symbols-outlined">manage_accounts</span>Pengguna</a>
+    {% endif %}
+    <a href="{{ url_for('profile') }}" class="{% if request.endpoint=='profile' %}active{% endif %}"><span class="material-symbols-outlined">account_circle</span>Profil</a>
+  </nav>
+</header>
+
+<main class="w-full pt-32 bg-background">
+<div class="flex flex-col w-full">
+
+<!-- SAPAAN DAN INFORMASI PENGUNJUNG -->
+<section class="w-full px-space-xl pt-space-lg pb-space-xs">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+
+        <div class="flex flex-col">
+            <div class="flex items-center gap-space-xs mb-1">
+                <span class="px-space-sm py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm font-bold flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"></span>
+                    BPJS Aktif • Terverifikasi SatuSehat
+                </span>
+
+                <span class="text-outline-variant">•</span>
+
+                <span class="font-label-sm text-on-surface-variant flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-primary">verified</span>
+                    No. Kartu:
+                    {{ current_user.no_bpjs|default('Belum terdaftar') if current_user is defined and current_user.is_authenticated else 'Belum terdaftar' }}
+                </span>
+            </div>
+
+            <h1 class="font-headline-lg text-on-surface font-bold tracking-tight">
+                Selamat datang, {{ user_name }}!
+            </h1>
+
+            <p class="font-body-md text-on-surface-variant">
+                {% if user_role == 'pasien' %}
+                    Akses layanan kesehatan keluarga Anda dengan lebih mudah.
+                {% elif user_role == 'dokter' %}
+                    Pantau konsultasi dan berikan pelayanan terbaik kepada pasien.
+                {% elif user_role == 'medis' %}
+                    Kelola pelayanan dan pantau kebutuhan pasien hari ini.
+                {% else %}
+                    Pantau aktivitas dan kelola layanan Puskesmas Digital dari satu tempat.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="flex items-center gap-space-sm flex-wrap">
+            <div class="bg-surface-container-lowest px-space-md py-space-sm rounded-xl shadow-sm flex items-center gap-space-sm">
+                <div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-xl">calendar_month</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-label-sm text-on-surface-variant">Kunjungan Terakhir</span>
+                    <span class="font-label-lg text-on-surface">14 Okt 2024 • Poli Gigi</span>
+                </div>
+            </div>
+
+            <button class="bg-error text-on-error px-space-md py-space-sm rounded-xl shadow-sm flex items-center gap-space-xs font-label-lg hover:bg-on-error-container transition-all"
+                    onclick="document.getElementById('modal-emergency').classList.remove('hidden')">
+                <span class="material-symbols-outlined text-xl">emergency_home</span>
+                <span>Darurat UGD 119</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- HERO BANNER -->
+<section class="w-full px-space-xl py-space-md">
+    <div class="max-w-7xl mx-auto">
+        <div class="relative w-full rounded-3xl bg-surface-container-lowest overflow-hidden shadow-sm flex flex-col lg:flex-row items-center justify-between min-h-[290px]">
+
+            <div class="absolute inset-0 pointer-events-none z-0">
+                <svg class="w-full h-full" fill="none" viewBox="0 0 1200 360" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M420 -20C470 90 520 220 740 260C920 292 1080 320 1220 370L1220 -20H420Z" fill="#e0f2fe" opacity="0.6"/>
+                    <path d="M480 -20C530 110 590 200 810 240C990 272 1120 300 1240 330L1240 -20H480Z" fill="#bae6fd" opacity="0.4"/>
+                    <circle cx="210" cy="330" fill="#f0f9ff" opacity="0.8" r="140"/>
+                </svg>
+            </div>
+
+            <div class="relative z-10 p-space-xl lg:max-w-xl flex flex-col justify-center">
+                <span class="font-label-sm uppercase tracking-wider text-primary font-bold mb-space-xs">
+                    PELAYANAN PRIMER TERINTEGRASI
+                </span>
+
+                <h2 class="font-display-lg text-on-surface leading-tight font-extrabold mb-space-sm">
+                    Good care starts<br/>with a conversation.
+                </h2>
+
+                <p class="font-body-md text-on-surface-variant mb-space-lg max-w-md">
+                    Mulai konsultasi, temukan informasi imunisasi, dan pantau riwayat pelayanan kesehatan dalam satu platform yang mudah digunakan.
+                </p>
+
+                <div class="flex items-center gap-space-md flex-wrap">
+                    <a class="inline-flex items-center justify-center px-space-lg py-3 rounded-xl bg-primary text-on-primary font-label-lg shadow-sm hover:bg-primary-container transition-all" href="#daftar-layanan">
+                        Jelajahi Layanan
+                    </a>
+
+                    <a class="inline-flex items-center gap-1 font-label-lg text-primary underline underline-offset-4 hover:text-tertiary" href="#jadwal-faskes">
+                        Cek Jadwal Nakes Hari Ini ↗
+                    </a>
+                </div>
+            </div>
+
+            <div class="relative z-10 w-full lg:w-[500px] h-[260px] lg:h-full self-end flex items-end justify-center pr-space-lg">
+                <img class="h-64 lg:h-80 w-auto object-contain object-bottom drop-shadow-md"
+                     alt="Dokter dan perawat sedang berkonsultasi di Puskesmas"
+                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAmBqLmq2KZH46tuaXCHNeh8Dczgg22q194RGYqLNo3LeiOUqkFA2pw7s3ye0Fj6hB6hNGHUiSmHl_DDT16_pzM9SNNhj3OSrwIoFHhDbDLgsx-Si_LtS-LxR-4gvOkhz3elWjjbKLPYshD8QIbI636bJpZrYGw7dho_JSNqYxPFaceu4Lfh9w4yj-Gy8pS3C0pblCKml2a2aXMXvN3KuzyG1aRGgW2eiHjsZyYnE"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- NOMOR ANTREAN -->
+<section class="w-full px-space-xl py-space-xs">
+    <div class="max-w-7xl mx-auto">
+        <div class="w-full bg-gradient-to-r from-primary to-tertiary text-on-primary rounded-3xl p-space-lg shadow-md relative overflow-hidden flex flex-col xl:flex-row items-center justify-between gap-space-lg">
+
+            <div class="absolute -right-12 -top-12 w-64 h-64 bg-on-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-space-md text-center sm:text-left z-10">
+                <div class="bg-surface-container-lowest text-primary rounded-2xl p-space-md flex flex-col items-center justify-center min-w-[130px] shadow-sm">
+                    <span class="font-label-sm text-on-surface-variant uppercase tracking-wider">Nomor Antrean Anda</span>
+                    <span class="font-display-lg text-[38px] font-extrabold text-primary my-0.5 leading-none">A-024</span>
+                    <span class="font-label-sm text-secondary font-bold flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                        Poli Umum
+                    </span>
+                </div>
+
+                <div class="flex flex-col justify-center">
+                    <div class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-on-primary/15 text-on-primary font-label-sm w-fit mb-1">
+                        <span class="material-symbols-outlined text-sm">sensors</span>
+                        Loket Pelayanan Sedang Berlangsung
+                    </div>
+
+                    <h3 class="font-headline-md text-on-primary font-bold">
+                        Sedang Dilayani:
+                        <span class="text-secondary-fixed">A-019</span>
+                        (Ruang Pemeriksaan 02)
+                    </h3>
+
+                    <p class="font-body-sm text-on-primary/90 mt-1">
+                        Sisa 5 antrean di depan Anda • Perkiraan panggilan:
+                        <span class="font-bold text-on-primary">10.15 WIB (± 25 menit)</span>.
+                        Mohon bersiap di Ruang Tunggu Lantai 1.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-space-md z-10 shrink-0">
+                <div class="hidden sm:flex bg-on-primary/10 backdrop-blur-md rounded-2xl p-space-sm items-center gap-space-sm">
+                    <div class="w-14 h-14 bg-surface-container-lowest rounded-xl p-1 flex items-center justify-center">
+                        <svg class="w-full h-full text-on-surface" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 3h2v3h-2v-3zm0-5h4v2h-4v-2zm-4 0h2v4h-2v-4zm2 2h2v2h-2v-2zm-2 4h4v2h-4v-2zm4 2h2v1h-2v-1z"/>
+                        </svg>
+                    </div>
+
+                    <div class="flex flex-col text-left pr-2">
+                        <span class="font-label-sm text-on-primary/80">Kode Booking</span>
+                        <span class="font-label-md font-mono font-bold text-on-primary">PKM-TB-8991</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <button class="px-space-md py-2.5 rounded-xl bg-surface-container-lowest text-primary font-label-lg shadow-sm hover:bg-surface-container-high transition-all flex items-center justify-center gap-1"
+                            onclick="alert('Tiket PDF Digital berhasil diunduh ke perangkat Anda.')">
+                        <span class="material-symbols-outlined text-lg">print</span>
+                        <span>Cetak / Simpan Tiket</span>
+                    </button>
+
+                    <button class="px-space-md py-2.5 rounded-xl bg-on-primary/20 text-on-primary hover:bg-on-primary/30 transition-all font-label-lg flex items-center justify-center gap-1"
+                            onclick="toggleQueueModal()">
+                        <span class="material-symbols-outlined text-lg">notifications_active</span>
+                        <span>Bunyikan Notifikasi</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- KONTEN UTAMA -->
+<section class="w-full px-space-xl py-space-lg">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+
+<div class="lg:col-span-8 flex flex-col gap-space-xl">
+
+    <!-- DAFTAR LAYANAN -->
+    <div class="flex flex-col" id="daftar-layanan">
+        <span class="font-label-sm text-primary uppercase font-bold tracking-wider mb-1">
+            LAYANAN &amp; BANTUAN KLINIS RESMI
+        </span>
+
+        <h2 class="font-headline-lg text-on-surface font-extrabold tracking-tight">
+            Perawatan cepat, dengan langkah berikutnya yang jelas.
+        </h2>
+
+        <p class="font-body-md text-on-surface-variant mt-1">
+            Mulai dari konsultasi daring, triase pintar, hingga penjadwalan antrean faskes tanpa calo dan bebas pungutan biaya BPJS.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-space-lg">
+
+        <!-- KONSULTASI DOKTER -->
+        <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group">
+            <div>
+                <div class="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary mb-space-md group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                    <span class="material-symbols-outlined text-2xl">stethoscope</span>
+                </div>
+
+                <h3 class="font-headline-sm text-on-surface font-bold mb-space-xs">Konsultasi Dokter Online</h3>
+
+                <p class="font-body-sm text-on-surface-variant leading-relaxed mb-space-lg">
+                    Pintu masuk utama untuk keluhan kesehatan umum, konsultasi resep ulang, dan telekonsultasi dokter umum via video call.
+                </p>
+            </div>
+
+            <a class="inline-flex items-center gap-1 font-label-md text-primary font-bold underline underline-offset-4 hover:text-tertiary" href="{{ url_for('konsultasi') }}">
+                <span>Mulai konsultasi</span>
+                <span class="material-symbols-outlined text-base">north_east</span>
+            </a>
+        </div>
+
+        <!-- KIA -->
+        <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group">
+            <div>
+                <div class="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary mb-space-md group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                    <span class="material-symbols-outlined text-2xl">favorite</span>
+                </div>
+
+                <h3 class="font-headline-sm text-on-surface font-bold mb-space-xs">Kesehatan Ibu &amp; Anak (KIA)</h3>
+
+                <p class="font-body-sm text-on-surface-variant leading-relaxed mb-space-lg">
+                    Jadwalkan pemeriksaan kehamilan (ANC), USG dasar, KB, serta konsultasi nutrisi balita bersama bidan dan dokter puskesmas.
+                </p>
+            </div>
+
+            <a class="inline-flex items-center gap-1 font-label-md text-primary font-bold underline underline-offset-4 hover:text-tertiary" href="#">
+                <span>Daftar poli KIA</span>
+                <span class="material-symbols-outlined text-base">north_east</span>
+            </a>
+        </div>
+
+        <!-- LABORATORIUM -->
+        <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group">
+            <div>
+                <div class="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary mb-space-md group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                    <span class="material-symbols-outlined text-2xl">vital_signs</span>
+                </div>
+
+                <h3 class="font-headline-sm text-on-surface font-bold mb-space-xs">Laboratorium &amp; Cek Darah</h3>
+
+                <p class="font-body-sm text-on-surface-variant leading-relaxed mb-space-lg">
+                    Konfirmasi rujukan pemeriksaan darah rutin, tes kolesterol, asam urat, gula darah, tes dahak TB, dan sputum puskesmas.
+                </p>
+            </div>
+
+            <a class="inline-flex items-center gap-1 font-label-md text-primary font-bold underline underline-offset-4 hover:text-tertiary" href="#">
+                <span>Cek slot jadwal lab</span>
+                <span class="material-symbols-outlined text-base">north_east</span>
+            </a>
+        </div>
+
+        <!-- AI MEDIS -->
+        <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group">
+            <div>
+                <div class="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary mb-space-md group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                    <span class="material-symbols-outlined text-2xl">smart_toy</span>
+                </div>
+
+                <h3 class="font-headline-sm text-on-surface font-bold mb-space-xs">Tanya Asisten AI Medis</h3>
+
+                <p class="font-body-sm text-on-surface-variant leading-relaxed mb-space-lg">
+                    Triase cerdas berbasis pedoman klinis Kemenkes RI untuk mengevaluasi gejala awal dan penanganan pertama di rumah.
+                </p>
+            </div>
+
+            <a class="inline-flex items-center gap-1 font-label-md text-primary font-bold underline underline-offset-4 hover:text-tertiary" href="{{ url_for('ai') }}">
+                <span>Buka triase AI</span>
+                <span class="material-symbols-outlined text-base">north_east</span>
+            </a>
+        </div>
+
+        <!-- IMUNISASI -->
+        <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group">
+            <div>
+                <div class="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary mb-space-md group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                    <span class="material-symbols-outlined text-2xl">child_care</span>
+                </div>
+
+                <h3 class="font-headline-sm text-on-surface font-bold mb-space-xs">KMS Digital &amp; Imunisasi</h3>
+
+                <p class="font-body-sm text-on-surface-variant leading-relaxed mb-space-lg">
+                    Pantau kurva tumbuh kembang berat badan balita, sertifikat vaksin PIN Polio, BCG, DPT, dan jadwal Posyandu terdekat.
+                </p>
+            </div>
+
+            <a class="inline-flex items-center gap-1 font-label-md text-primary font-bold underline underline-offset-4 hover:text-tertiary" href="{{ url_for('imunisasi') }}">
+                <span>Buka buku vaksin</span>
+                <span class="material-symbols-outlined text-base">north_east</span>
+            </a>
+        </div>
+
+        <!-- FARMASI -->
+        <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group">
+            <div>
+                <div class="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary mb-space-md group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                    <span class="material-symbols-outlined text-2xl">medication</span>
+                </div>
+
+                <h3 class="font-headline-sm text-on-surface font-bold mb-space-xs">Antrean Resep Farmasi</h3>
+
+                <p class="font-body-sm text-on-surface-variant leading-relaxed mb-space-lg">
+                    Pantau proses peracikan obat puyer dan tablet tanpa harus berkerumun di depan loket apotek Puskesmas.
+                </p>
+            </div>
+
+            <a class="inline-flex items-center gap-1 font-label-md text-primary font-bold underline underline-offset-4 hover:text-tertiary" href="#">
+                <span>Lacak nomor resep</span>
+                <span class="material-symbols-outlined text-base">north_east</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- RINGKASAN SKRINING PROLANIS -->
+    <div class="w-full bg-surface-container-lowest rounded-3xl p-space-xl shadow-sm flex flex-col gap-space-lg">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+            <div>
+                <span class="font-label-sm text-primary uppercase font-bold">MONITORING KESEHATAN TERPADU</span>
+                <h3 class="font-headline-md text-on-surface font-bold">Ringkasan Skrining Terakhir (Prolanis)</h3>
+            </div>
+
+            <span class="px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm self-start sm:self-auto">
+                Diperbarui: 14 Oktober 2024
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+
+            <div class="p-space-md rounded-2xl bg-surface-container-low flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <span class="font-label-sm text-on-surface-variant">Tekanan Darah</span>
+                    <span class="material-symbols-outlined text-secondary text-xl">monitor_heart</span>
+                </div>
+
+                <div class="my-space-sm">
+                    <div class="flex items-baseline gap-1">
+                        <span class="font-headline-lg font-extrabold text-on-surface">118/78</span>
+                        <span class="font-label-sm text-on-surface-variant">mmHg</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 mt-1 text-secondary font-label-sm font-semibold">
+                        <span class="material-symbols-outlined text-sm">check_circle</span>
+                        Normal Optimal
+                    </div>
+                </div>
+
+                <svg class="w-full h-8 text-secondary" fill="none" viewBox="0 0 100 24">
+                    <path d="M0 18 Q 20 8, 40 14 T 80 10 T 100 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"/>
+                </svg>
+            </div>
+
+            <div class="p-space-md rounded-2xl bg-surface-container-low flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <span class="font-label-sm text-on-surface-variant">Gula Darah Puasa (GDP)</span>
+                    <span class="material-symbols-outlined text-primary text-xl">bloodtype</span>
+                </div>
+
+                <div class="my-space-sm">
+                    <div class="flex items-baseline gap-1">
+                        <span class="font-headline-lg font-extrabold text-on-surface">94</span>
+                        <span class="font-label-sm text-on-surface-variant">mg/dL</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 mt-1 text-secondary font-label-sm font-semibold">
+                        <span class="material-symbols-outlined text-sm">check_circle</span>
+                        Terkendali Baik
+                    </div>
+                </div>
+
+                <svg class="w-full h-8 text-primary" fill="none" viewBox="0 0 100 24">
+                    <path d="M0 16 Q 30 18, 55 11 T 85 9 T 100 10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"/>
+                </svg>
+            </div>
+
+            <div class="p-space-md rounded-2xl bg-surface-container-low flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <span class="font-label-sm text-on-surface-variant">Kolesterol Total</span>
+                    <span class="material-symbols-outlined text-tertiary text-xl">biotech</span>
+                </div>
+
+                <div class="my-space-sm">
+                    <div class="flex items-baseline gap-1">
+                        <span class="font-headline-lg font-extrabold text-on-surface">182</span>
+                        <span class="font-label-sm text-on-surface-variant">mg/dL</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 mt-1 text-secondary font-label-sm font-semibold">
+                        <span class="material-symbols-outlined text-sm">check_circle</span>
+                        Batas Normal (&lt; 200)
+                    </div>
+                </div>
+
+                <svg class="w-full h-8 text-tertiary" fill="none" viewBox="0 0 100 24">
+                    <path d="M0 14 Q 25 10, 50 16 T 75 12 T 100 13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="p-space-md rounded-2xl bg-surface-container-high flex flex-col sm:flex-row items-center justify-between gap-space-md">
+            <div class="flex items-center gap-space-md">
+                <div class="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center text-primary shrink-0">
+                    <span class="material-symbols-outlined text-2xl">health_and_safety</span>
+                </div>
+
+                <p class="font-body-sm text-on-surface leading-tight">
+                    Skrining kesehatan berkala Anda masuk dalam program
+                    <strong>BPJS Prolanis Sehat</strong>.
+                    Anda berhak mendapatkan pemeriksaan laboratorium gratis berikutnya pada bulan Desember 2024.
+                </p>
+            </div>
+
+            <a class="shrink-0 px-space-md py-2 rounded-xl bg-primary text-on-primary font-label-sm font-semibold hover:bg-primary-container transition-all" href="{{ url_for('rekam_medis') }}">
+                Buka Rekam Medis Lengkap
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- KOLOM KANAN -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg" id="jadwal-faskes">
+
+    <!-- JADWAL KLINIS -->
+    <div class="bg-surface-container-lowest rounded-3xl p-space-lg shadow-sm flex flex-col gap-space-md">
+
+        <div class="flex items-center justify-between pb-space-xs">
+            <div class="flex flex-col">
+                <span class="font-label-sm text-primary uppercase font-bold">JADWAL KLINIS AKTIF</span>
+                <h3 class="font-headline-sm text-on-surface font-bold">Dokter &amp; Nakes Jaga</h3>
+            </div>
+
+            <span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm font-semibold">
+                Pagi - Siang
+            </span>
+        </div>
+
+        <!-- DOKTER UMUM -->
+        <div class="p-space-md rounded-2xl bg-surface-container-low flex flex-col gap-space-sm">
+            <div class="flex items-center gap-space-sm">
+                <div class="relative shrink-0">
+                    <img class="w-12 h-12 rounded-xl object-cover"
+                         alt="Foto dr. Ratna Suryaningsih"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuArX7UaQXqNugsvzzBYWU-UOBQ_t5vCwSLyUr0pG98Mr2O4MEv7654NMl5epmcD6pVxc2DaP7Dmpu6ImGKhlquX5splah4dMXkn0gB-YsK5daSYjIkQ7fJLw9eetJKqAnXSuMbx4GS229-uLkxn8kPgBP5EeqfMAyRklLNjE7TtpMz24Ki8sdjwcwIONyooeOd0B4w0Kt7Cy5S9nmsnUA1baoD2pNky-5n8SJ58E5U"/>
+
+                    <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-secondary ring-2 ring-surface-container-lowest"></span>
+                </div>
+
+                <div class="flex flex-col min-w-0">
+                    <span class="font-label-lg font-bold text-on-surface truncate">dr. Ratna Suryaningsih</span>
+                    <span class="font-body-sm text-on-surface-variant truncate">Poli Umum • Ruang 02</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-1 font-label-sm">
+                <span class="text-on-surface-variant flex items-center gap-1">
+                    <span class="material-symbols-outlined text-base text-primary">schedule</span>
+                    08.00 - 13.00 WIB
+                </span>
+
+                <button class="px-3 py-1.5 rounded-lg bg-primary text-on-primary font-label-sm hover:bg-primary-container transition-colors"
+                        onclick="alert('Permintaan konsultasi online diteruskan ke meja perawat triase.')">
+                    Telekonsul
+                </button>
+            </div>
+        </div>
+
+        <!-- DOKTER GIGI -->
+        <div class="p-space-md rounded-2xl bg-surface-container-low flex flex-col gap-space-sm">
+            <div class="flex items-center gap-space-sm">
+                <div class="relative shrink-0">
+                    <img class="w-12 h-12 rounded-xl object-cover"
+                         alt="Foto drg. Hendra Wijaya"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuClmSZSv5H061zKS7R4Q_NH2JL-r6_-G30GFlkSTTWV_Gn6dyxmUvLRwwg-tJWMmGcluNA5SPT70elhcRFayFevyboBaCA-2XLUC4ujj6m52PNOpepxpjlYr6BO-PB4hNJlaLVB_gz927LYO4mpssLk0V8RizSjNDXfeaaNqQQByVyR5CxctQS-8SHkYcUta4Bw9N5zYManWFsXwW1QQ34LJwAUoxjT_Dt10r8xwms"/>
+
+                    <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-secondary ring-2 ring-surface-container-lowest"></span>
+                </div>
+
+                <div class="flex flex-col min-w-0">
+                    <span class="font-label-lg font-bold text-on-surface truncate">drg. Hendra Wijaya, Sp.KGA</span>
+                    <span class="font-body-sm text-on-surface-variant truncate">Poli Gigi &amp; Mulut • Ruang 05</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-1 font-label-sm">
+                <span class="text-on-surface-variant flex items-center gap-1">
+                    <span class="material-symbols-outlined text-base text-primary">schedule</span>
+                    09.00 - 14.30 WIB
+                </span>
+
+                <button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-sm hover:bg-surface-variant transition-colors"
+                        onclick="alert('Antrean Poli Gigi saat ini tersisa 3 slot.')">
+                    Ambil Slot
+                </button>
+            </div>
+        </div>
+
+        <!-- BIDAN -->
+        <div class="p-space-md rounded-2xl bg-surface-container-low flex flex-col gap-space-sm">
+            <div class="flex items-center gap-space-sm">
+                <div class="relative shrink-0">
+                    <img class="w-12 h-12 rounded-xl object-cover"
+                         alt="Foto Bidan Anisa Maharani"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsIHd9Qdyk1hSHX39pQOpf8bRVQp-C4vUhRGqBgv5iXIvn46f1SHt9PM1yQx663yQ8SaRPXRnQP9uZTfRkT1OiXyRZubZCTkqn5tcm-cGEM4gF1UpP9SvYRhj4lyIzW0rWq0HVXimQHCIt-gPpXels-vBpM9l2KhtxIbon-smVnwo8pI3e_v_MfwAkJF3t-FfMUfyuCGaiQXx_lXWmumklu_MyLgSt-05FkeEigjQ"/>
+
+                    <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-secondary ring-2 ring-surface-container-lowest"></span>
+                </div>
+
+                <div class="flex flex-col min-w-0">
+                    <span class="font-label-lg font-bold text-on-surface truncate">Bdn. Anisa Maharani, S.Tr.Keb</span>
+                    <span class="font-body-sm text-on-surface-variant truncate">Poli KIA &amp; Imunisasi • Ruang 08</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-1 font-label-sm">
+                <span class="text-on-surface-variant flex items-center gap-1">
+                    <span class="material-symbols-outlined text-base text-primary">schedule</span>
+                    08.00 - 14.00 WIB
+                </span>
+
+                <button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-sm hover:bg-surface-variant transition-colors"
+                        onclick="alert('Jadwal imunisasi bayi hari ini: Polio & Pentavalen')">
+                    Jadwal KIA
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROGRAM PRIORITAS NASIONAL -->
+    <div class="bg-surface-container-lowest rounded-3xl p-space-lg shadow-sm flex flex-col gap-space-md">
+
+        <div class="flex items-center gap-space-xs">
+            <span class="material-symbols-outlined text-primary text-xl">campaign</span>
+            <h3 class="font-headline-sm text-on-surface font-bold">Program Prioritas Nasional</h3>
+        </div>
+
+        <div class="p-space-md rounded-2xl bg-surface-container-low flex flex-col gap-1">
+            <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-[10px] font-bold">KEMENKES RI</span>
+                <span class="font-label-sm text-on-surface-variant">20-25 Okt 2024</span>
+            </div>
+
+            <h4 class="font-label-lg font-bold text-on-surface mt-1">
+                Pekan Imunisasi Nasional (PIN) Polio
+            </h4>
+
+            <p class="font-body-sm text-on-surface-variant leading-relaxed">
+                Diberikan secara gratis bagi anak usia 0-7 tahun di seluruh posyandu RW Penggilingan tanpa syarat domisili KTP.
+            </p>
+
+            <a class="font-label-sm text-primary font-bold mt-1 inline-flex items-center gap-1" href="#">
+                Lihat titik lokasi Posyandu ↗
+            </a>
+        </div>
+
+        <div class="p-space-md rounded-2xl bg-surface-container-low flex flex-col gap-1">
+            <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-[10px] font-bold">POSBINDU LANSIA</span>
+                <span class="font-label-sm text-on-surface-variant">Setiap Kamis</span>
+            </div>
+
+            <h4 class="font-label-lg font-bold text-on-surface mt-1">
+                Senam Jantung &amp; Cek Tensi Lansia
+            </h4>
+
+            <p class="font-body-sm text-on-surface-variant leading-relaxed">
+                Pemeriksaan gratis gula darah, tensi, dan senam kebugaran di Aula Lantai 3 Puskesmas Penggilingan mulai pukul 06.30 WIB.
+            </p>
+        </div>
+    </div>
+
+    <!-- LAYANAN DARURAT -->
+    <div class="rounded-3xl bg-error-container p-space-lg text-on-error-container flex flex-col gap-space-sm shadow-sm">
+
+        <div class="flex items-center gap-space-sm">
+            <div class="w-10 h-10 rounded-xl bg-error flex items-center justify-center text-on-error shrink-0">
+                <span class="material-symbols-outlined text-2xl">ambulance</span>
+            </div>
+
+            <div class="flex flex-col">
+                <span class="font-label-sm text-on-error-container uppercase font-bold tracking-wider">LAYANAN DARURAT 24 JAM</span>
+                <span class="font-headline-sm font-extrabold">Ambulans Gawat Darurat</span>
+            </div>
+        </div>
+
+        <p class="font-body-sm text-on-error-container/90">
+            Penjemputan medis darurat bebas biaya wilayah Jakarta Selatan. Terkoneksi langsung dengan sistem rujukan IGD RSUD Pasar Minggu.
+        </p>
+
+        <div class="flex items-center gap-space-sm pt-space-xs">
+            <a class="flex-1 py-2.5 rounded-xl bg-error text-on-error font-label-lg font-bold text-center hover:bg-on-error-container transition-colors" href="tel:119">
+                Hubungi 119
+            </a>
+
+            <a class="flex-1 py-2.5 rounded-xl bg-surface-container-lowest text-on-surface font-label-lg font-semibold text-center hover:bg-surface-container-high transition-colors" href="https://wa.me/628129900119" target="_blank" rel="noopener noreferrer">
+                Chat WA IGD
+            </a>
+        </div>
+    </div>
+
+</div>
+</div>
+</section>
+
+<!-- MODAL ALARM ANTREAN -->
+<div class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-inverse-surface/60 backdrop-blur-sm p-4" id="modal-queue">
+    <div class="bg-surface-container-lowest rounded-3xl p-space-xl max-w-md w-full shadow-2xl flex flex-col gap-space-md">
+
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-xs text-primary">
+                <span class="material-symbols-outlined text-2xl">notifications_active</span>
+                <span class="font-headline-sm font-bold">Alarm Antrean Aktif</span>
+            </div>
+
+            <button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface" onclick="toggleQueueModal()">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+        </div>
+
+        <p class="font-body-md text-on-surface-variant">
+            Perangkat Anda akan membunyikan alarm getar dan suara panggilan ketika nomor <strong>A-024</strong> tersisa 2 antrean lagi. Pastikan volume ponsel Anda aktif.
+        </p>
+
+        <div class="p-space-md bg-surface-container-low rounded-2xl flex items-center justify-between">
+            <span class="font-label-md text-on-surface font-semibold">Getar &amp; Notifikasi Suara</span>
+            <input checked class="w-5 h-5 accent-primary cursor-pointer" type="checkbox"/>
+        </div>
+
+        <button class="w-full py-3 rounded-xl bg-primary text-on-primary font-label-lg font-bold shadow-sm hover:bg-primary-container transition-all" onclick="toggleQueueModal()">
+            Simpan Pengaturan
+        </button>
+    </div>
+</div>
+
+<!-- MODAL DARURAT -->
+<div class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-inverse-surface/70 backdrop-blur-sm p-4" id="modal-emergency">
+    <div class="bg-surface-container-lowest rounded-3xl p-space-xl max-w-md w-full shadow-2xl flex flex-col gap-space-md">
+
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-xs text-error">
+                <span class="material-symbols-outlined text-[28px]">emergency</span>
+                <span class="font-headline-sm font-bold text-error">Kontak Cepat UGD &amp; Ambulans</span>
+            </div>
+
+            <button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface"
+                    onclick="document.getElementById('modal-emergency').classList.add('hidden')">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+        </div>
+
+        <p class="font-body-md text-on-surface-variant">
+            Panggilan darurat akan langsung terhubung ke Command Center Dinas Kesehatan DKI Jakarta &amp; Puskesmas Penggilingan.
+        </p>
+
+        <div class="flex flex-col gap-space-sm">
+            <a class="p-space-md rounded-2xl bg-error text-on-error flex items-center justify-between font-label-lg font-bold hover:bg-on-error-container transition-all" href="tel:119">
+                <span class="flex items-center gap-2">
+                    <span class="material-symbols-outlined">call</span>
+                    Telepon UGD 119 (Bebas Pulsa)
+                </span>
+                <span class="material-symbols-outlined text-lg">chevron_right</span>
+            </a>
+
+            <a class="p-space-md rounded-2xl bg-surface-container-low text-on-surface flex items-center justify-between font-label-lg font-semibold hover:bg-surface-container-high transition-all" href="tel:02183034552">
+                <span class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">deskphone</span>
+                    Telp Puskesmas: (021) 8303-4552
+                </span>
+                <span class="material-symbols-outlined text-lg">chevron_right</span>
+            </a>
+        </div>
+
+        <button class="w-full py-2.5 rounded-xl bg-surface-container-high text-on-surface font-label-md font-semibold"
+                onclick="document.getElementById('modal-emergency').classList.add('hidden')">
+            Tutup
+        </button>
+    </div>
+</div>
+
+</div>
+</main>
+
+<!-- FOOTER -->
+<footer class="w-full bg-surface-container-low mt-space-xl py-space-xl">
+    <div class="w-full px-space-xl mx-auto flex flex-col gap-space-lg">
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-space-lg items-start">
+
+            <div class="flex flex-col gap-space-sm">
+                <div class="flex items-center gap-space-xs">
+                    <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+                        <span class="material-symbols-outlined text-base">local_hospital</span>
+                    </div>
+
+                    <span class="font-headline-sm text-primary">Puskesmas Digital</span>
+                </div>
+
+                <p class="font-body-sm text-on-surface-variant">
+                    Integrasi portal fasilitas kesehatan primer terpadu untuk pelayanan preventif, kuratif, dan skrining masyarakat berbasis SatuSehat.
+                </p>
+
+                <div class="flex flex-wrap gap-space-xs mt-space-xs">
+                    <span class="px-space-sm py-0.5 bg-surface-container-highest rounded-full font-label-sm text-tertiary">Kemenkes RI</span>
+                    <span class="px-space-sm py-0.5 bg-secondary-container rounded-full font-label-sm text-on-secondary-container">SatuSehat Terverifikasi</span>
+                    <span class="px-space-sm py-0.5 bg-primary-fixed rounded-full font-label-sm text-on-primary-fixed-variant">BPJS Kesehatan</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-space-xs">
+                <span class="font-label-lg text-on-surface">Jam Pelayanan</span>
+                <span class="font-body-sm text-on-surface-variant">Poli Umum &amp; Gigi: 07.30 - 16.00 WIB</span>
+                <span class="font-body-sm text-on-surface-variant">KIA &amp; Imunisasi: 08.00 - 14.00 WIB</span>
+                <span class="font-body-sm text-error font-semibold">Unit Gawat Darurat (UGD): 24 Jam</span>
+                <span class="font-body-sm text-on-surface-variant">Farmasi &amp; Lab: 07.30 - 20.00 WIB</span>
+            </div>
+
+            <div class="flex flex-col gap-space-xs">
+                <span class="font-label-lg text-on-surface">Layanan Terpadu</span>
+                <a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Antrean Online Faskes</a>
+                <a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ url_for('imunisasi') }}">Jadwal Posyandu &amp; Imunisasi</a>
+                <a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ url_for('konsultasi') }}">Konsultasi Telemedisin Puskesmas</a>
+                <a class="font-body-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ url_for('rekam_medis') }}">Integrasi Riwayat Rekam Medis</a>
+            </div>
+
+            <div class="flex flex-col gap-space-xs">
+                <span class="font-label-lg text-on-surface">Kontak Darurat &amp; Faskes</span>
+                <span class="font-body-sm text-on-surface-variant">Puskesmas Penggilingan, Jakarta Timur</span>
+                <span class="font-body-sm text-on-surface-variant">Telepon: (021) 8303-4552</span>
+                <span class="font-body-sm text-primary font-bold">WhatsApp Pengaduan: 0812-9900-119</span>
+                <span class="font-body-sm text-error font-bold">Call Center Darurat: 119</span>
+            </div>
+
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between pt-space-md bg-surface-container-high rounded-xl px-space-md gap-space-sm">
+            <span class="font-body-sm text-on-surface-variant">
+                © 2024 Dinas Kesehatan &amp; Kementerian Kesehatan RI. Seluruh Hak Cipta Dilindungi.
+            </span>
+
+            <div class="flex items-center gap-space-md">
+                <a class="font-label-sm text-on-surface-variant hover:text-primary" href="#">Kebijakan Privasi</a>
+                <a class="font-label-sm text-on-surface-variant hover:text-primary" href="#">Syarat Penggunaan</a>
+                <a class="font-label-sm text-on-surface-variant hover:text-primary" href="#">Aksesibilitas</a>
+            </div>
+        </div>
+
+    </div>
+</footer>
+
+<script>
+    function toggleQueueModal() {
+        const modal = document.getElementById('modal-queue');
+
+        if (modal) {
+            modal.classList.toggle('hidden');
+        }
+    }
+
+    // Menutup modal jika pengguna klik area luar modal
+    document.addEventListener('click', function(event) {
+        const queueModal = document.getElementById('modal-queue');
+        const emergencyModal = document.getElementById('modal-emergency');
+
+        if (event.target === queueModal) {
+            queueModal.classList.add('hidden');
+        }
+
+        if (event.target === emergencyModal) {
+            emergencyModal.classList.add('hidden');
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Konsultasi & Dokter{% endblock %}
+{% block content %}
+<section class="page-wrap">
+  <span class="eyebrow">LAYANAN KONSULTASI</span>
+  <h1 class="page-title">Konsultasi &amp; Tenaga Medis</h1>
+  <p class="sub-title">Ajukan konsultasi dan pantau proses pelayanan kesehatan Anda.</p>
+  <div class="hero-banner compact-hero">
+    <div class="hero-copy"><span class="eyebrow">PUSKESMAS DIGITAL</span><h2>Kesehatan Anda<br>menjadi prioritas.</h2><p>Terhubung dengan dokter, perawat, bidan, dan tenaga kesehatan lainnya.</p></div>
+    <div class="hero-visual"><div class="medical-illustration"><span class="material-symbols-outlined">stethoscope</span><b>CARE<br>TOGETHER</b></div></div>
+  </div>
+  {% if current_user.role=='pasien' %}
+  <section class="side-panel form-panel">
+    <div class="section-heading"><div><h2>Buat Konsultasi Baru</h2><p>Lengkapi informasi untuk mengajukan jadwal.</p></div><span class="service-icon"><span class="material-symbols-outlined">edit_calendar</span></span></div>
+    <form method="POST" class="form-grid">
+      <label>Jenis Layanan<select name="service" required><option value="">Pilih layanan</option><option>Konsultasi Dokter</option><option>Konsultasi Perawat</option><option>Konsultasi Bidan</option><option>Konsultasi Gizi</option><option>Layanan Umum</option></select></label>
+      <label>Pilih Tenaga Medis<select name="provider_id"><option value="">Belum ditentukan</option>{% for p in providers %}<option value="{{ p.id }}">{{ p.name }} — {{ p.profession or p.role|capitalize }}</option>{% endfor %}</select></label>
+      <label>Tanggal &amp; Waktu<input type="datetime-local" name="appointment_date" required></label>
+      <label class="full-field">Keluhan atau kebutuhan konsultasi<textarea name="notes" rows="4" placeholder="Jelaskan kebutuhan konsultasi Anda..."></textarea></label>
+      <div class="full-field"><button class="btn-primary" type="submit">Kirim Permintaan Konsultasi →</button></div>
+    </form>
+  </section>
+  {% endif %}
+  <div class="section-heading"><div><h2>Tenaga Kesehatan</h2><p>Dokter dan tenaga medis yang terdaftar.</p></div></div>
+  <div class="provider-grid">
+    {% for p in providers %}
+    <div class="side-panel provider-card"><span class="provider-avatar">{{ p.name[0]|upper }}</span><div><b>{{ p.name }}</b><small>{{ p.profession or p.role|capitalize }}</small><span class="live-pill">Terdaftar</span></div></div>
+    {% else %}<div class="side-panel">Belum ada tenaga kesehatan terdaftar.</div>{% endfor %}
+  </div>
+  <section class="side-panel">
+    <div class="section-heading"><div><h2>Daftar Konsultasi</h2><p>Riwayat dan status pengajuan konsultasi.</p></div><span class="count-pill">{{ appointments|length }} data</span></div>
+    <div class="table-scroll"><table><thead><tr><th>Pasien / Petugas</th><th>Layanan</th><th>Jadwal</th><th>Keluhan</th><th>Status</th>{% if current_user.role!='pasien' %}<th>Aksi</th>{% endif %}</tr></thead>
+    <tbody>
+    {% for a in appointments %}
+      <tr>
+        <td><b>{% if current_user.role=='pasien' %}{{ a.provider or 'Belum ditentukan' }}{% else %}{{ a.patient }}{% endif %}</b></td>
+        <td>{{ a.service }}</td><td>{{ a.appointment_date|replace('T',' ') }}</td><td>{{ a.notes or '-' }}</td><td><span class="status-pill">{{ a.status }}</span></td>
+        {% if current_user.role!='pasien' %}
+        <td><form method="POST" action="{{ url_for('update_appointment', appointment_id=a.id) }}" class="inline-form"><select name="status">{% for st in ['Menunggu','Dikonfirmasi','Selesai','Dibatalkan'] %}<option value="{{ st }}" {% if a.status==st %}selected{% endif %}>{{ st }}</option>{% endfor %}</select><button class="btn-small" type="submit">Update</button></form></td>
+        {% endif %}
+      </tr>
+    {% else %}<tr><td colspan="{% if current_user.role!='pasien' %}6{% else %}5{% endif %}" class="empty-cell">Belum ada data konsultasi.</td></tr>{% endfor %}
+    </tbody></table></div>
+  </section>
+</section>
+{% endblock %}

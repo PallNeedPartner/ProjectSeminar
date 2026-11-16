@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Data Pasien{% endblock %}
+{% block content %}
+<section class="page-wrap">
+  <span class="eyebrow">MANAJEMEN PELAYANAN</span><h1 class="page-title">Data Pasien</h1>
+  <p class="sub-title">Daftar pasien yang terdaftar pada Puskesmas Digital.</p>
+  <div class="stats-grid">
+    <div class="stat-tile"><span class="service-icon"><span class="material-symbols-outlined">groups</span></span><small>Total Pasien</small><strong>{{ users|length }}</strong><span>Pasien terdaftar</span></div>
+    <div class="stat-tile"><span class="service-icon"><span class="material-symbols-outlined">verified_user</span></span><small>Status Data</small><strong>Aktif</strong><span>Data akun sistem</span></div>
+  </div>
+  <section class="side-panel"><div class="section-heading"><div><h2>Daftar Pasien Terdaftar</h2><p>Informasi akun pasien.</p></div><span class="count-pill">{{ users|length }} pasien</span></div>
+    <input id="patient-search" class="search-field" placeholder="Cari nama, email, atau nomor telepon...">
+    <div class="table-scroll"><table id="patient-table"><thead><tr><th>Nama Pasien</th><th>Email</th><th>Telepon</th><th>Alamat</th><th>Terdaftar</th></tr></thead><tbody>
+    {% for user in users %}<tr><td><b>{{ user.name }}</b></td><td>{{ user.email }}</td><td>{{ user.phone or '-' }}</td><td>{{ user.address or '-' }}</td><td>{{ user.created_at[:10] if user.created_at else '-' }}</td></tr>
+    {% else %}<tr><td colspan="5" class="empty-cell">Belum ada pasien terdaftar.</td></tr>{% endfor %}
+    </tbody></table></div>
+  </section>
+</section>
+{% endblock %}

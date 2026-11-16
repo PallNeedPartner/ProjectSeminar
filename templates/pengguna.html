@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Kelola Pengguna{% endblock %}
+{% block content %}
+<section class="page-wrap">
+  <span class="eyebrow">ADMINISTRASI SISTEM</span><h1 class="page-title">Kelola Pengguna</h1>
+  <p class="sub-title">Tambah akun dan kelola daftar pengguna berdasarkan peran.</p>
+  <section class="side-panel form-panel"><div class="section-heading"><div><h2>Tambah Pengguna Baru</h2><p>Buat akun pasien atau tenaga kesehatan.</p></div></div>
+    <form method="POST" class="form-grid">
+      <label>Nama Lengkap<input name="name" required></label><label>Email<input type="email" name="email" required></label>
+      <label>Password Sementara<input type="password" name="password" minlength="6" required></label>
+      <label>Role<select name="role" required><option value="pasien">Pasien</option><option value="dokter">Dokter</option><option value="medis">Tenaga Medis</option><option value="admin">Admin</option></select></label>
+      <label>Nomor Telepon<input name="phone"></label><label>Profesi<input name="profession"></label>
+      <div class="full-field"><button class="btn-primary" type="submit">Tambah Pengguna →</button></div>
+    </form>
+  </section>
+  <section class="side-panel"><div class="section-heading"><div><h2>Daftar Pengguna</h2><p>Pengguna yang memiliki akses ke sistem.</p></div><span class="count-pill">{{ users|length }} akun</span></div>
+    <input id="user-search" class="search-field" placeholder="Cari nama atau email...">
+    <div class="table-scroll"><table id="user-table"><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Telepon</th><th>Profesi</th></tr></thead><tbody>
+    {% for u in users %}<tr><td><b>{{ u.name }}</b></td><td>{{ u.email }}</td><td><span class="role-label">{{ u.role|capitalize }}</span></td><td>{{ u.phone or '-' }}</td><td>{{ u.profession or '-' }}</td></tr>
+    {% else %}<tr><td colspan="5" class="empty-cell">Belum ada pengguna.</td></tr>{% endfor %}
+    </tbody></table></div>
+  </section>
+</section>
+{% endblock %}

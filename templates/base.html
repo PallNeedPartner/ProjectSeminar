@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Puskesmas Digital{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          primary:'#006194', 'primary-container':'#007bb9', tertiary:'#006387',
+          secondary:'#006c4a', background:'#faf8ff', surface:'#ffffff',
+          'surface-low':'#f2f3ff', 'surface-high':'#e2e7ff',
+          ink:'#131b2e', muted:'#596575', line:'#e4eaf3', 'error-soft':'#ffdad6'
+        },
+        fontFamily: { sans:['Plus Jakarta Sans','sans-serif'] },
+        boxShadow: { soft:'0 5px 22px rgba(28,65,110,.06)' },
+        borderRadius: { '2xl':'1rem', '3xl':'1.4rem' }
+      }}
+    };
+  </script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+
+<body class="bg-background text-ink font-sans min-h-screen">
+{% if current_user %}
+<header class="site-header">
+  <div class="header-inner">
+    <a href="{{ url_for('dashboard') }}" class="brand">
+      <span class="brand-mark"><span class="material-symbols-outlined">local_hospital</span></span>
+      <span><b>Puskesmas Digital</b><small>Sistem Layanan Kesehatan Terpadu</small></span>
+    </a>
+    <div class="location-chip"><span class="material-symbols-outlined">location_on</span> Puskesmas Penggilingan</div>
+    <div class="header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input id="globalSearch" placeholder="Cari layanan, dokter, informasi..." aria-label="Cari halaman">
+    </div>
+    <div class="header-actions">
+      <a class="emergency-chip" href="tel:119"><span class="material-symbols-outlined">emergency</span> IGD 119</a>
+      <a class="icon-button" href="{{ url_for('profile') }}" title="Profil"><span class="material-symbols-outlined">notifications</span></a>
+      <div class="user-chip">
+        <span class="user-avatar">{{ (current_user.name or 'U')[0]|upper }}</span>
+        <span class="user-chip-text"><b>{{ current_user.name }}</b><small>{{ current_user.role|capitalize }}</small></span>
+      </div>
+      <a class="logout-link" href="{{ url_for('logout') }}" title="Keluar"><span class="material-symbols-outlined">logout</span></a>
+    </div>
+  </div>
+  <nav class="main-nav">
+    <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint=='dashboard' %}active{% endif %}"><span class="material-symbols-outlined">home</span>Beranda</a>
+    <a href="{{ url_for('ai') }}" class="{% if request.endpoint=='ai' %}active{% endif %}"><span class="material-symbols-outlined">smart_toy</span>Tanya AI Medis</a>
+    <a href="{{ url_for('imunisasi') }}" class="{% if request.endpoint=='imunisasi' %}active{% endif %}"><span class="material-symbols-outlined">vaccines</span>Jadwal &amp; Imunisasi</a>
+    <a href="{{ url_for('konsultasi') }}" class="{% if request.endpoint=='konsultasi' %}active{% endif %}"><span class="material-symbols-outlined">stethoscope</span>Konsultasi &amp; Dokter</a>
+    <a href="{{ url_for('rekam_medis') }}" class="{% if request.endpoint=='rekam_medis' %}active{% endif %}"><span class="material-symbols-outlined">clinical_notes</span>Rekam Medis</a>
+    {% if current_user.role in ['admin','dokter','medis'] %}
+    <a href="{{ url_for('pasien') }}" class="{% if request.endpoint=='pasien' %}active{% endif %}"><span class="material-symbols-outlined">groups</span>Data Pasien</a>
+    {% endif %}
+    {% if current_user.role=='admin' %}
+    <a href="{{ url_for('pengguna') }}" class="{% if request.endpoint=='pengguna' %}active{% endif %}"><span class="material-symbols-outlined">manage_accounts</span>Pengguna</a>
+    {% endif %}
+    <a href="{{ url_for('profile') }}" class="{% if request.endpoint=='profile' %}active{% endif %}"><span class="material-symbols-outlined">account_circle</span>Profil</a>
+  </nav>
+</header>
+{% endif %}
+<main class="{% if current_user %}app-main{% else %}auth-main{% endif %}">
+  {% with messages=get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-wrap">
+      {% for category,message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+{% if current_user %}
+<footer class="site-footer">
+  <div><b>✚ Puskesmas Digital</b><span>Sistem Informasi Pelayanan Kesehatan</span></div>
+  <div><b>Jam Pelayanan</b><span>Senin–Jumat · 08.00–16.00 WIB</span></div>
+  <div><b>Kontak Darurat</b><span>IGD 119 · Hubungi fasilitas kesehatan terdekat</span></div>
+  <small>© 2026 Puskesmas Digital · Prototipe Sistem Informasi</small>
+</footer>
+{% endif %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

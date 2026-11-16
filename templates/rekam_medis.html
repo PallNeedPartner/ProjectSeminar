@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Rekam Medis{% endblock %}
+{% block content %}
+<section class="page-wrap">
+  <span class="eyebrow">INFORMASI KESEHATAN</span><h1 class="page-title">Rekam Medis Digital</h1>
+  <p class="sub-title">Riwayat catatan pemeriksaan dan pelayanan kesehatan.</p>
+  <div class="hero-banner compact-hero"><div class="hero-copy"><span class="eyebrow">CATATAN KESEHATAN TERINTEGRASI</span><h2>Riwayat kesehatan<br>lebih terorganisir.</h2><p>Catatan pemeriksaan tersusun agar informasi pelayanan mudah ditinjau oleh pihak yang berwenang.</p></div><div class="hero-visual"><div class="medical-illustration"><span class="material-symbols-outlined">clinical_notes</span><b>MEDICAL<br>RECORD</b></div></div></div>
+  {% if current_user.role in ['admin','dokter','medis'] %}
+  <section class="side-panel form-panel"><div class="section-heading"><div><h2>Tambah Catatan Pemeriksaan</h2><p>Catatan hanya boleh dibuat oleh petugas berwenang.</p></div></div>
+    <form method="POST" class="form-grid">
+      <label>Nama Pasien<select name="patient_id" required>{% for p in patients %}<option value="{{ p.id }}">{{ p.name }}</option>{% else %}<option value="">Belum ada pasien</option>{% endfor %}</select></label>
+      <label>Judul Pemeriksaan<input name="title" required placeholder="Contoh: Pemeriksaan umum"></label>
+      <label class="full-field">Catatan Pemeriksaan<textarea name="notes" rows="4" required placeholder="Masukkan catatan pemeriksaan..."></textarea></label>
+      <div class="full-field"><button class="btn-primary" type="submit">Simpan Catatan →</button></div>
+    </form>
+  </section>
+  {% endif %}
+  <section class="side-panel"><div class="section-heading"><div><h2>Riwayat Rekam Medis</h2><p>Daftar catatan pemeriksaan yang tersedia.</p></div><span class="count-pill">{{ records|length }} catatan</span></div>
+    <div class="record-list">{% for r in records %}
+      <article class="record-item"><span class="record-icon"><span class="material-symbols-outlined">description</span></span><div><h3>{{ r.title }}</h3><p>{{ r.notes }}</p><small>{% if current_user.role=='pasien' %}Petugas: {{ r.provider or 'Petugas' }}{% else %}Pasien: {{ r.patient }} · Petugas: {{ r.provider or 'Petugas' }}{% endif %} · {{ r.created_at }}</small></div></article>
+    {% else %}<p class="empty-note">Belum ada catatan rekam medis.</p>{% endfor %}</div>
+  </section>
+  <p class="privacy-note"><span class="material-symbols-outlined">lock</span> Data rekam medis bersifat rahasia. Akses dan penggunaannya harus mengikuti kewenangan serta kebijakan perlindungan data kesehatan.</p>
+</section>
+{% endblock %}

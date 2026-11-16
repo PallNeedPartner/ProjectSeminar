@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Profil Saya{% endblock %}
+{% block content %}
+<section class="page-wrap">
+  <span class="eyebrow">PENGATURAN AKUN</span><h1 class="page-title">Profil Saya</h1>
+  <p class="sub-title">Kelola informasi pribadi dan identitas akun Anda.</p>
+  <div class="profile-layout">
+    <aside class="side-panel profile-summary">
+      <div class="profile-big-avatar">{{ user.name[0]|upper }}</div><h2>{{ user.name }}</h2><span class="role-label">{{ user.role|capitalize }}</span>
+      <p>{{ user.profession or 'Pengguna Puskesmas Digital' }}</p>
+      <div class="profile-contact">
+        <span><span class="material-symbols-outlined">mail</span>{{ user.email }}</span>
+        <span><span class="material-symbols-outlined">call</span>{{ user.phone or 'Nomor belum diisi' }}</span>
+        <span><span class="material-symbols-outlined">location_on</span>{{ user.address or 'Alamat belum diisi' }}</span>
+      </div>
+    </aside>
+    <section class="side-panel form-panel"><div class="section-heading"><div><h2>Informasi Pribadi</h2><p>Pastikan informasi kontak selalu terbaru.</p></div></div>
+      <form method="POST" class="form-grid">
+        <label class="full-field">Nama Lengkap<input name="name" value="{{ user.name }}" required></label>
+        <label>Email<input value="{{ user.email }}" disabled></label>
+        <label>Nomor Telepon<input name="phone" value="{{ user.phone or '' }}" placeholder="08xxxxxxxxxx"></label>
+        <label>Role Pengguna<input value="{{ user.role|capitalize }}" disabled></label>
+        <label>Profesi<input name="profession" value="{{ user.profession or '' }}" placeholder="Profesi / pekerjaan"></label>
+        <label class="full-field">Alamat<textarea name="address" rows="3">{{ user.address or '' }}</textarea></label>
+        <div class="full-field"><button class="btn-primary" type="submit">Simpan Perubahan →</button></div>
+      </form>
+    </section>
+  </div>
+</section>
+{% endblock %}
