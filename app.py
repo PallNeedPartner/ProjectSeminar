@@ -1,35 +1,46 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-import sqlite3
 import os
 from functools import wraps
 from datetime import datetime
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
+import psycopg2
+import psycopg2.extras
+import psycopg2.errors
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "ganti-secret-key-untuk-produksi")
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "puskesmas.db")
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+
+class Conn:
+    """Wrapper tipis supaya kode lama (con.execute(...?...)) tetap jalan di Postgres."""
+
+    def __init__(self):
+        self.raw = psycopg2.connect(
+            DATABASE_URL, cursor_factory=psycopg2.extras.DictCursor
+        )
+
+    def execute(self, sql, params=()):
+        cur = self.raw.cursor()
+        cur.execute(sql.replace("?", "%s"), params)
+        return cur
+
+    def commit(self):
+        self.raw.commit()
+
+    def rollback(self):
+        self.raw.rollback()
+
+    def close(self):
+        self.raw.close()
 
 
 def db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys = ON")
-    return conn
-
-
-def add_column_if_missing(conn, table, column, definition):
-    """Tambahkan kolom tanpa menghapus atau membuat ulang data lama."""
-    columns = [row[1] for row in conn.execute(f"PRAGMA table_info({table})").fetchall()]
-    if column not in columns:
-        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
-        return True
-    return False
-
-
-def init_db():
+    return Conn()
     con = db()
     con.executescript("""
         CREATE TABLE IF NOT EXISTS users (
@@ -372,7 +383,8 @@ def pengguna():
             )
             con.commit()
             flash("Pengguna baru berhasil ditambahkan.", "success")
-        except sqlite3.IntegrityError:
+                except psycopg2.errors.UniqueViolation:
+            con.rollback()
             flash("Email sudah digunakan.", "error")
     users = con.execute("SELECT id,name,email,role,phone,profession FROM users ORDER BY role,name").fetchall()
     con.close()
@@ -455,5 +467,6 @@ def inject_date():
 
 
 if __name__ == "__main__":
-    init_db()
+    if __name__ == "__main__":
+    app.run(debug=True)
     app.run(debug=True)
