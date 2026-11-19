@@ -41,122 +41,6 @@ class Conn:
 
 def db():
     return Conn()
-    con = db()
-    con.executescript("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
-            role TEXT NOT NULL,
-            phone TEXT DEFAULT '',
-            address TEXT DEFAULT '',
-            profession TEXT DEFAULT '',
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
-        );
-
-        CREATE TABLE IF NOT EXISTS appointments (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            patient_id INTEGER NOT NULL,
-            provider_id INTEGER,
-            service TEXT NOT NULL,
-            appointment_date TEXT NOT NULL,
-            notes TEXT DEFAULT '',
-            status TEXT DEFAULT 'Menunggu',
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
-        );
-
-        CREATE TABLE IF NOT EXISTS immunizations (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            age_group TEXT NOT NULL,
-            description TEXT NOT NULL,
-            schedule TEXT NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS health_records (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            patient_id INTEGER NOT NULL,
-            provider_id INTEGER,
-            title TEXT NOT NULL,
-            notes TEXT NOT NULL,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
-        );
-    """)
-
-    # MIGRASI DATABASE LAMA:
-    # CREATE TABLE IF NOT EXISTS tidak menambahkan kolom ke tabel yang sudah ada.
-    # Karena itu, tambahkan kolom yang mungkin belum ada pada database lama.
-    add_column_if_missing(con, "users", "phone", "TEXT DEFAULT ''")
-    add_column_if_missing(con, "users", "address", "TEXT DEFAULT ''")
-    add_column_if_missing(con, "users", "profession", "TEXT DEFAULT ''")
-    users_created_added = add_column_if_missing(con, "users", "created_at", "TEXT")
-
-    add_column_if_missing(con, "appointments", "provider_id", "INTEGER")
-    add_column_if_missing(con, "appointments", "notes", "TEXT DEFAULT ''")
-    add_column_if_missing(con, "appointments", "status", "TEXT DEFAULT 'Menunggu'")
-    appointment_created_added = add_column_if_missing(
-        con, "appointments", "created_at", "TEXT"
-    )
-
-    add_column_if_missing(con, "health_records", "provider_id", "INTEGER")
-    health_created_added = add_column_if_missing(
-        con, "health_records", "created_at", "TEXT"
-    )
-
-    # Isi created_at untuk data lama agar query ORDER BY created_at tidak gagal.
-    if users_created_added:
-        con.execute("UPDATE users SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL")
-    if appointment_created_added:
-        con.execute("""
-            UPDATE appointments
-            SET created_at = COALESCE(NULLIF(appointment_date, ''), CURRENT_TIMESTAMP)
-            WHERE created_at IS NULL OR created_at = ''
-        """)
-    else:
-        con.execute("""
-            UPDATE appointments
-            SET created_at = COALESCE(NULLIF(appointment_date, ''), CURRENT_TIMESTAMP)
-            WHERE created_at IS NULL OR created_at = ''
-        """)
-    if health_created_added:
-        con.execute("UPDATE health_records SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL")
-
-    count = con.execute("SELECT COUNT(*) FROM users").fetchone()[0]
-    if count == 0:
-        seeds = [
-            ("Administrator", "admin@puskesmas.test", "admin123", "admin", "081200000001", "Puskesmas Digital", "Administrator"),
-            ("Dr. Andi Pratama", "dokter@puskesmas.test", "dokter123", "dokter", "081200000002", "Bekasi", "Dokter Umum"),
-            ("Siti Rahma, A.Md.Keb", "medis@puskesmas.test", "medis123", "medis", "081200000003", "Bekasi", "Bidan"),
-            ("Ny. Siti Nurhaliza", "pasien@puskesmas.test", "pasien123", "pasien", "081200000004", "Bekasi", "Pengguna"),
-        ]
-        for name, email, password, role, phone, address, profession in seeds:
-            con.execute(
-                """INSERT INTO users(name,email,password,role,phone,address,profession)
-                   VALUES(?,?,?,?,?,?,?)""",
-                (name, email, generate_password_hash(password), role, phone, address, profession),
-            )
-
-        items = [
-            ("Hepatitis B (HB-0)", "Bayi baru lahir", "Diberikan untuk membantu melindungi bayi dari infeksi Hepatitis B.", "Segera setelah lahir, idealnya kurang dari 24 jam"),
-            ("BCG dan Polio Tetes 1", "Bayi usia 0–1 bulan", "Imunisasi dasar untuk perlindungan terhadap tuberkulosis berat dan polio.", "Usia 1 bulan"),
-            ("DPT-HB-Hib 1 dan Polio 2", "Bayi usia 2 bulan", "Perlindungan terhadap difteri, pertusis, tetanus, Hepatitis B, Hib, dan polio.", "Usia 2 bulan"),
-            ("Campak-Rubella (MR)", "Bayi usia 9 bulan", "Perlindungan terhadap penyakit campak dan rubella.", "Usia 9 bulan"),
-            ("Imunisasi lanjutan", "Balita", "Jadwal lanjutan mengikuti program dan ketentuan fasilitas kesehatan.", "Sesuai buku KIA dan petugas"),
-        ]
-        con.executemany(
-            "INSERT INTO immunizations(name,age_group,description,schedule) VALUES(?,?,?,?)",
-            items,
-        )
-        # Data contoh hanya dimasukkan saat database benar-benar masih kosong.
-        con.execute(
-            """INSERT INTO appointments
-               (patient_id,provider_id,service,appointment_date,notes,status)
-               VALUES(1,2,'Konsultasi Dokter','2026-11-20T09:00','Pemeriksaan umum','Menunggu')"""
-        )
-
-    con.commit()
-    con.close()
 
 
 def login_required(fn):
@@ -313,7 +197,6 @@ def konsultasi():
         flash("Permintaan konsultasi berhasil dikirim.", "success")
         con.close()
         return redirect(url_for("konsultasi"))
-
     providers = con.execute(
         "SELECT id,name,profession,role FROM users WHERE role IN ('dokter','medis') ORDER BY role"
     ).fetchall()
@@ -383,7 +266,7 @@ def pengguna():
             )
             con.commit()
             flash("Pengguna baru berhasil ditambahkan.", "success")
-                except psycopg2.errors.UniqueViolation:
+        except psycopg2.errors.UniqueViolation:
             con.rollback()
             flash("Email sudah digunakan.", "error")
     users = con.execute("SELECT id,name,email,role,phone,profession FROM users ORDER BY role,name").fetchall()
@@ -467,6 +350,4 @@ def inject_date():
 
 
 if __name__ == "__main__":
-    if __name__ == "__main__":
-    app.run(debug=True)
     app.run(debug=True)
