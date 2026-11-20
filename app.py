@@ -10,14 +10,13 @@ import psycopg2.errors
 
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="public/static", static_url_path="/static")
 app.secret_key = os.environ.get("SECRET_KEY", "ganti-secret-key-untuk-produksi")
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 
 class Conn:
-    """Wrapper tipis supaya kode lama (con.execute(...?...)) tetap jalan di Postgres."""
 
     def __init__(self):
         self.raw = psycopg2.connect(
